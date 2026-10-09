@@ -1,0 +1,67 @@
+@import "tailwindcss";
+
+/* โทนสีแนว cozy: ผ้าลินินหมอก + เขียวมอส + น้ำผึ้งเล็กน้อย */
+@theme {
+  --color-paper: #f0efea;
+  --color-surface: #faf9f6;
+  --color-ink: #232b27;
+  --color-muted: #6b746e;
+  --color-line: #dad9d1;
+  --color-moss: #3e6a58;
+  --color-moss-deep: #2f5344;
+  --color-moss-soft: #dce8e1;
+  --color-honey: #d9a441;
+  --color-honey-soft: #f5e8c8;
+  --color-danger: #a8483f;
+  --font-sans: var(--font-plex), "Noto Sans Thai", system-ui, sans-serif;
+}
+
+:root {
+  color-scheme: light;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* โฟกัสด้วยคีย์บอร์ดต้องมองเห็นชัด */
+:focus-visible {
+  outline: 2px solid var(--color-moss);
+  outline-offset: 2px;
+}
+
+/* สถานที่ใหม่ที่เพิ่งถูกสลับเข้ามา เลื่อนเข้าเพื่อให้เห็นว่ามีอะไรเปลี่ยน */
+@keyframes swap-in {
+  from { opacity: 0; transform: translateX(14px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+.swap-in {
+  animation: swap-in 0.35s ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .swap-in { animation: none; }
+  html { scroll-behavior: auto; }
+}
+
+/* Leaflet popup ให้เข้ากับธีม */
+.leaflet-popup-content-wrapper {
+  border-radius: 14px;
+  font-family: var(--font-sans);
+  color: var(--color-ink);
+}
+.leaflet-popup-content { margin: 12px 14px; }
+.leaflet-container { font-family: var(--font-sans); background: var(--color-paper); }
+
+/* ปรับสีแผนที่ OpenStreetMap ให้จางและนุ่มลง เข้ากับธีม (ไม่ต้องใช้คีย์ของผู้ให้บริการแผนที่อื่น) */
+.soft-tiles {
+  filter: saturate(0.5) contrast(0.92) brightness(1.04) sepia(0.12);
+}
