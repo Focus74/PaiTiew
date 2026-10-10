@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import AuthBar from '@/components/AuthBar'
 import TripView from '@/components/TripView'
+import TelegramConnect from '@/components/TelegramConnect'
 import { supabase } from '@/lib/supabase'
 import { useUser, signInWithGoogle } from '@/lib/auth'
 import type { SavedTrip } from '@/lib/types'
@@ -62,6 +63,7 @@ export default function TripsPage() {
           </div>
         ) : (
           <>
+            <TelegramConnect userId={user.id} />
             {loading && <p className="text-muted">กำลังโหลด</p>}
             {error && <p className="text-danger">โหลดไม่สำเร็จ: {error}</p>}
             {!loading && !error && trips.length === 0 && (
