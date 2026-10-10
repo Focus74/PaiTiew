@@ -28,9 +28,6 @@ export async function signInWithGoogle() {
     // ล็อกอินเสร็จให้กลับมาหน้าเดิม
     options: {
       redirectTo: window.location.href,
-      // ให้ Google ถามเลือกบัญชีทุกครั้ง ไม่เข้าบัญชีเดิมอัตโนมัติ
-      queryParams: { prompt: 'select_account' },
-    },
   })
   if (error) alert('เข้าสู่ระบบไม่สำเร็จ: ' + error.message)
 }
