@@ -12,6 +12,10 @@ export function useUser() {
     supabase.auth.getSession().then(({ data }) => {
       setUser(data.session?.user ?? null)
       setLoading(false)
+      // ล้าง #access_token ออกจากแถบที่อยู่ ไม่ให้ค้างสะสม
+      if (window.location.hash.includes('access_token')) {
+        window.history.replaceState(null, '', window.location.pathname + window.location.search)
+      }
     })
     const { data: sub } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null)
@@ -25,10 +29,8 @@ export function useUser() {
 export async function signInWithGoogle() {
   const { error } = await supabase.auth.signInWithOAuth({
     provider: 'google',
-    // กลับมาหน้าเดิมโดยตัด #access_token เก่าออก (ไม่งั้นลิงก์ยาวขึ้นทุกครั้งจน Google ตอบ 400)
     options: {
       redirectTo: window.location.origin + window.location.pathname,
-      // ให้ Google ถามเลือกบัญชีทุกครั้ง
       queryParams: { prompt: 'select_account' },
     },
   })
