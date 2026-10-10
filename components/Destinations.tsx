@@ -1,5 +1,6 @@
 'use client'
 
+import Photo from '@/components/Photo'
 import { DESTINATIONS } from '@/lib/destinations'
 
 export default function Destinations({ onPick }: { onPick: (name: string) => void }) {
@@ -12,7 +13,7 @@ export default function Destinations({ onPick }: { onPick: (name: string) => voi
         <p className="mt-3 text-muted">แตะที่ไหนก็ได้ เราจะใส่ชื่อให้ในแบบฟอร์ม แล้วคุณแค่บอกงบกับสไตล์ที่ชอบ</p>
       </div>
 
-      {/* มือถือ: เลื่อนแนวนอน / จอใหญ่: โมเสกการ์ดใหญ่หนึ่ง เล็กสี่ */}
+      {/* มือถือ: เลื่อนแนวนอน / จอใหญ่: โมเสกรูปใหญ่หนึ่ง เล็กสี่ */}
       <div className="mt-8 flex gap-4 overflow-x-auto snap-x snap-mandatory -mx-5 px-5 scroll-pl-5 pb-3 [scrollbar-width:none] md:mx-0 md:px-0 md:pb-0 md:grid md:grid-cols-4 md:auto-rows-[minmax(190px,auto)] md:overflow-visible md:snap-none">
         {DESTINATIONS.map((d, i) => (
           <button
@@ -23,7 +24,13 @@ export default function Destinations({ onPick }: { onPick: (name: string) => voi
               i === 0 ? 'md:col-span-2 md:row-span-2' : ''
             }`}
           >
-            <span className="absolute inset-0 -z-10 bg-[radial-gradient(80%_60%_at_85%_0%,rgba(255,255,255,0.18),transparent)] transition-opacity duration-500 group-hover:opacity-60" />
+            <Photo
+              src={d.image}
+              position={d.position}
+              className="absolute inset-0 -z-10 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+            />
+            {/* เฉดดำด้านล่าง ให้ตัวหนังสือสีขาวอ่านชัดบนรูปสว่าง */}
+            <span className="absolute inset-0 -z-10 bg-gradient-to-t from-ink/90 via-ink/35 via-45% to-transparent" />
             <span className="absolute inset-x-0 bottom-0 block p-5 sm:p-6">
               <span className="block text-sm text-honey">{d.region}</span>
               <span className={`block font-display font-medium leading-tight ${i === 0 ? 'text-3xl md:text-4xl' : 'text-2xl'}`}>
