@@ -27,7 +27,7 @@ export async function signInWithGoogle() {
     provider: 'google',
     // ล็อกอินเสร็จให้กลับมาหน้าเดิม
     options: {
-      redirectTo: window.location.href,
+         redirectTo: window.location.origin + window.location.pathname,
   })
   if (error) alert('เข้าสู่ระบบไม่สำเร็จ: ' + error.message)
 }
