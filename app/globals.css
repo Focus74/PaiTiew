@@ -14,6 +14,7 @@
   --color-honey-soft: #f5e8c8;
   --color-danger: #a8483f;
   --font-sans: var(--font-plex), "Noto Sans Thai", system-ui, sans-serif;
+  --font-display: var(--font-serif-th), "Noto Serif Thai", Georgia, serif;
 }
 
 :root {
@@ -24,7 +25,12 @@ html {
   scroll-behavior: smooth;
 }
 
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
 body {
+  overflow-x: clip; /* กันหน้าเลื่อนซ้าย-ขวาบนมือถือ */
   background: var(--color-paper);
   color: var(--color-ink);
   font-family: var(--font-sans);
@@ -64,4 +70,25 @@ body {
 /* ปรับสีแผนที่ OpenStreetMap ให้จางและนุ่มลง เข้ากับธีม (ไม่ต้องใช้คีย์ของผู้ให้บริการแผนที่อื่น) */
 .soft-tiles {
   filter: saturate(0.5) contrast(0.92) brightness(1.04) sepia(0.12);
+}
+
+/* มือถือ: ตัดหน่วงตอนแตะ และไม่ให้เกิดแถบสีวาบตอนกดปุ่ม */
+a, button, summary, [role="button"] {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ปุ่มซูมแผนที่ให้ใหญ่พอกดด้วยนิ้ว */
+.leaflet-touch .leaflet-bar a {
+  width: 40px;
+  height: 40px;
+  line-height: 40px;
+}
+
+/* ช่องวันที่บน iOS มักสูงไม่เท่าช่องอื่นและข้อความอยู่กลาง */
+input[type="date"] {
+  appearance: none;
+  -webkit-appearance: none;
+  min-height: 3.25rem;
+  text-align: left;
 }

@@ -5,6 +5,8 @@ import AuthBar from '@/components/AuthBar'
 import TripForm, { defaultForm, styleString, type FormValues } from '@/components/TripForm'
 import TripView from '@/components/TripView'
 import RefinePanel from '@/components/RefinePanel'
+import Hero from '@/components/Hero'
+import Destinations from '@/components/Destinations'
 import { supabase } from '@/lib/supabase'
 import { useUser, signInWithGoogle } from '@/lib/auth'
 import type { TripPlan, TripGuide } from '@/lib/types'
@@ -228,19 +230,36 @@ export default function HomePage() {
     }
   }
 
+  // ยังไม่มีแผน = หน้าแรกแบบเต็ม (รูปเปิด + ปลายทางแนะนำ) มีแผนแล้วโชว์เฉพาะผลลัพธ์
+  const landing = !plan
+
+  // แตะปลายทางแนะนำ: ใส่ชื่อลงฟอร์มแล้วเลื่อนลงไปที่ฟอร์ม
+  const pickDestination = (name: string) => {
+    patch({ destination: name })
+    document.getElementById('plan-form')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
+
   return (
-    <main className="min-h-screen">
+    <main className="min-h-dvh">
+      {landing ? (
+        <Hero />
+      ) : (
+        <div className="mx-auto max-w-6xl px-5 sm:px-8">
+          <AuthBar />
+        </div>
+      )}
+
       <div className="mx-auto max-w-6xl px-5 sm:px-8 pb-24">
-        <AuthBar />
+        {landing && <Destinations onPick={pickDestination} />}
 
         {/* ฟอร์ม / สรุปสิ่งที่เลือก */}
         {formOpen || !used ? (
-          <section className="max-w-2xl pt-6 sm:pt-12 pb-10">
-            <h1 className="text-4xl sm:text-5xl font-semibold tracking-tight leading-[1.15] text-ink">
-              วันนี้อยากไปไหน
-            </h1>
-            <p className="mt-4 mb-10 text-muted max-w-prose">
-              บอกปลายทางกับงบที่มี เราจัดแผนให้ แล้วคุณปรับได้จนกว่าจะถูกใจ
+          <section id="plan-form" className="scroll-mt-6 max-w-2xl pt-14 sm:pt-24 pb-6 sm:pb-10">
+            <h2 className="font-display text-3xl sm:text-4xl leading-[1.35] font-medium text-ink">
+              ออกแบบทริปของคุณ
+            </h2>
+            <p className="mt-3 mb-8 sm:mb-10 text-muted max-w-prose">
+              กรอกปลายทางกับงบคร่าวๆ ไกด์ส่วนตัวจะจัดแผนให้ แล้วคุณปรับได้จนกว่าจะถูกใจ
             </p>
             <TripForm values={form} onChange={patch} onSubmit={handleGenerate} loading={loading} />
           </section>
@@ -253,7 +272,7 @@ export default function HomePage() {
             </p>
             <button
               onClick={() => setFormOpen(true)}
-              className="px-4 py-1.5 rounded-full border border-line text-sm text-ink hover:bg-surface cursor-pointer"
+              className="px-4 py-2 rounded-full border border-line text-sm text-ink hover:bg-surface cursor-pointer"
             >
               แก้ข้อมูลแล้วสร้างใหม่
             </button>
