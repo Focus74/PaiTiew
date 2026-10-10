@@ -25,8 +25,12 @@ export function useUser() {
 export async function signInWithGoogle() {
   const { error } = await supabase.auth.signInWithOAuth({
     provider: 'google',
-    // ล็อกอินเสร็จให้กลับมาหน้าเดิม
-    options: { redirectTo: window.location.href },
+    // กลับมาหน้าเดิมโดยตัด #access_token เก่าออก (ไม่งั้นลิงก์ยาวขึ้นทุกครั้งจน Google ตอบ 400)
+    options: {
+      redirectTo: window.location.origin + window.location.pathname,
+      // ให้ Google ถามเลือกบัญชีทุกครั้ง
+      queryParams: { prompt: 'select_account' },
+    },
   })
   if (error) alert('เข้าสู่ระบบไม่สำเร็จ: ' + error.message)
 }
