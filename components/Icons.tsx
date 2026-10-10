@@ -62,3 +62,10 @@ export const SpinnerIcon = ({ className }: P) => (
     <path d="M12 3a9 9 0 1 0 9 9" />
   </svg>
 )
+
+export const MapIcon = ({ className }: P) => (
+  <svg {...base} className={className}>
+    <path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2z" />
+    <path d="M9 4v14M15 6v14" />
+  </svg>
+)

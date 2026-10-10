@@ -79,7 +79,7 @@ export default function TelegramConnect({ userId }: { userId: string }) {
   if (linked === null) return null
 
   return (
-    <section className="mb-10 max-w-xl rounded-2xl bg-moss-soft/50 p-5 space-y-3">
+    <section className="mb-8 sm:mb-10 max-w-xl rounded-2xl bg-moss-soft/50 p-4 sm:p-5 space-y-3">
       <h2 className="font-semibold text-ink">แจ้งเตือนผ่าน Telegram</h2>
       {linked ? (
         <>
@@ -91,13 +91,13 @@ export default function TelegramConnect({ userId }: { userId: string }) {
             <button
               onClick={sendTest}
               disabled={busy}
-              className="px-4 py-1.5 rounded-full bg-moss hover:bg-moss-deep text-surface text-sm font-medium cursor-pointer disabled:opacity-50"
+              className="px-4 py-2 rounded-full bg-moss hover:bg-moss-deep text-surface text-sm font-medium cursor-pointer disabled:opacity-50"
             >
               ส่งข้อความทดสอบ
             </button>
             <button
               onClick={unlink}
-              className="px-4 py-1.5 rounded-full text-sm text-danger hover:bg-danger/5 cursor-pointer"
+              className="px-4 py-2 rounded-full text-sm text-danger hover:bg-danger/5 cursor-pointer"
             >
               ยกเลิกการเชื่อม
             </button>
@@ -112,7 +112,7 @@ export default function TelegramConnect({ userId }: { userId: string }) {
                 href={url}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-block px-5 py-2 rounded-full bg-moss hover:bg-moss-deep text-surface text-sm font-medium"
+                className="inline-block px-5 py-2.5 rounded-full bg-moss hover:bg-moss-deep text-surface text-sm font-medium"
               >
                 เปิดบอทใน Telegram
               </a>
@@ -122,7 +122,7 @@ export default function TelegramConnect({ userId }: { userId: string }) {
             <button
               onClick={startLink}
               disabled={busy}
-              className="px-5 py-2 rounded-full bg-moss hover:bg-moss-deep text-surface text-sm font-medium cursor-pointer disabled:opacity-50"
+              className="px-5 py-2.5 rounded-full bg-moss hover:bg-moss-deep text-surface text-sm font-medium cursor-pointer disabled:opacity-50"
             >
               เชื่อม Telegram
             </button>

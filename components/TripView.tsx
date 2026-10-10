@@ -1,11 +1,11 @@
 'use client'
 
 import dynamic from 'next/dynamic'
-import type { ReactNode } from 'react'
+import { useState, type ReactNode } from 'react'
 import { navigateUrl, searchUrl } from '@/lib/mapLinks'
 import { dayColor } from '@/lib/dayColors'
 import { useMediaQuery } from '@/lib/useMediaQuery'
-import { BedIcon, HeartIcon, NavIcon, SearchIcon, SpinnerIcon, SwapIcon } from '@/components/Icons'
+import { BedIcon, HeartIcon, MapIcon, NavIcon, SearchIcon, SpinnerIcon, SwapIcon } from '@/components/Icons'
 import type { TripPlan, TripGuide } from '@/lib/types'
 
 const TripMap = dynamic(() => import('@/components/Map'), { ssr: false })
@@ -46,7 +46,7 @@ function IconBtn({
   busy?: boolean
   children: ReactNode
 }) {
-  const cls = `h-9 w-9 rounded-full flex items-center justify-center transition-colors cursor-pointer ${
+  const cls = `h-11 w-11 sm:h-9 sm:w-9 rounded-full flex items-center justify-center transition-colors cursor-pointer ${
     active ? 'bg-moss-soft text-moss-deep' : 'text-muted hover:bg-moss-soft hover:text-moss-deep'
   }`
   if (href) {
@@ -66,6 +66,7 @@ function IconBtn({
 export default function TripView({ plan, guide, area, origin, days, budgetTotal, editable, afterHotels }: Props) {
   const isDesktop = useMediaQuery('(min-width: 1024px)')
   const liked = editable?.liked ?? []
+  const [mapOpen, setMapOpen] = useState(false)
 
   // ---------- ประมาณการค่าใช้จ่าย ----------
   const nights = Math.max(days - 1, 0)
@@ -92,11 +93,11 @@ export default function TripView({ plan, guide, area, origin, days, budgetTotal,
   )
 
   return (
-    <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,440px)] items-start">
-      <div className="min-w-0 space-y-12">
+    <div className="grid gap-8 sm:gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,440px)] items-start">
+      <div className="min-w-0 space-y-10 sm:space-y-12">
         {/* ชื่อทริป + งบ */}
         <section className="space-y-4">
-          <h2 className="text-3xl font-semibold leading-tight tracking-tight text-ink">{plan.tripTitle}</h2>
+          <h2 className="text-2xl sm:text-3xl font-semibold leading-tight tracking-tight text-ink">{plan.tripTitle}</h2>
           <p className="text-muted max-w-prose">{plan.summary}</p>
 
           {estimate > 0 && (
@@ -129,14 +130,27 @@ export default function TripView({ plan, guide, area, origin, days, budgetTotal,
           )}
         </section>
 
-        {/* แผนที่ (มือถือ) */}
-        {!isDesktop && <section aria-label="แผนที่">{map('h-[320px]')}</section>}
+        {/* แผนที่ (มือถือ): ซ่อนไว้ก่อน กดเปิดเมื่ออยากดู จะได้เลื่อนอ่านแผนได้ไม่ติดแผนที่ */}
+        {!isDesktop && (
+          <section aria-label="แผนที่" className="space-y-3">
+            <button
+              type="button"
+              onClick={() => setMapOpen((o) => !o)}
+              aria-expanded={mapOpen}
+              className="w-full flex items-center justify-center gap-2 py-3 rounded-full border border-line bg-surface text-ink text-sm font-medium cursor-pointer hover:border-moss"
+            >
+              <MapIcon />
+              {mapOpen ? 'ซ่อนแผนที่' : 'ดูแผนที่ทริป'}
+            </button>
+            {mapOpen && map('h-[60dvh] min-h-[320px]')}
+          </section>
+        )}
 
         {/* ตารางเที่ยว */}
         <section className="space-y-8" aria-label="แผนรายวัน">
           {plan.itinerary.map((day, di) => (
             <div key={day.day}>
-              <div className="flex flex-wrap items-baseline justify-between gap-2 pb-2 border-b border-line">
+              <div className="sticky top-0 z-10 -mx-5 px-5 sm:mx-0 sm:px-0 pt-2 flex flex-wrap items-baseline justify-between gap-2 pb-2 border-b border-line bg-paper/95 backdrop-blur-sm">
                 <h3 className="flex items-baseline gap-3 min-w-0">
                   <span className="h-2.5 w-2.5 rounded-full shrink-0 translate-y-[-1px]" style={{ background: dayColor(di) }} />
                   <span className="text-lg font-semibold text-ink">วันที่ {day.day}</span>
@@ -152,7 +166,7 @@ export default function TripView({ plan, guide, area, origin, days, budgetTotal,
                   return (
                     <li
                       key={place.name}
-                      className={`swap-in flex gap-3 py-3.5 ${swapping ? 'opacity-50' : ''}`}
+                      className={`swap-in grid grid-cols-[1.5rem_minmax(0,1fr)] sm:grid-cols-[1.5rem_minmax(0,1fr)_auto] gap-x-3 py-3.5 ${swapping ? 'opacity-50' : ''}`}
                     >
                       <span
                         className="mt-0.5 h-6 w-6 rounded-full shrink-0 flex items-center justify-center text-xs font-semibold text-surface"
@@ -160,12 +174,12 @@ export default function TripView({ plan, guide, area, origin, days, budgetTotal,
                       >
                         {pi + 1}
                       </span>
-                      <div className="min-w-0 flex-1">
+                      <div className="min-w-0">
                         <p className="font-medium text-ink">{place.name}</p>
                         <p className="text-sm text-muted">{place.description}</p>
                         {place.cost && <p className="text-xs text-muted/90 mt-0.5">{place.cost}</p>}
                       </div>
-                      <div className="flex shrink-0 -mr-1.5">
+                      <div className="col-start-2 sm:col-start-3 sm:row-start-1 flex -ml-2.5 mt-1 sm:ml-0 sm:mt-0 sm:-mr-1.5">
                         {editable && (
                           <>
                             <IconBtn
@@ -204,16 +218,16 @@ export default function TripView({ plan, guide, area, origin, days, budgetTotal,
                 const key = `h-${hi}`
                 const swapping = editable?.swappingKey === key
                 return (
-                  <li key={h.name} className={`swap-in flex gap-3 py-3.5 ${swapping ? 'opacity-50' : ''}`}>
+                  <li key={h.name} className={`swap-in grid grid-cols-[1.5rem_minmax(0,1fr)] sm:grid-cols-[1.5rem_minmax(0,1fr)_auto] gap-x-3 py-3.5 ${swapping ? 'opacity-50' : ''}`}>
                     <span className="mt-0.5 h-6 w-6 rounded-lg shrink-0 flex items-center justify-center bg-honey text-surface">
                       <BedIcon className="h-3.5 w-3.5" />
                     </span>
-                    <div className="min-w-0 flex-1">
+                    <div className="min-w-0">
                       <p className="font-medium text-ink">{h.name}</p>
                       <p className="text-sm text-muted">{h.description}</p>
                       <p className="text-sm text-ink mt-0.5">ประมาณ {h.priceRange}</p>
                     </div>
-                    <div className="flex shrink-0 -mr-1.5">
+                    <div className="col-start-2 sm:col-start-3 sm:row-start-1 flex -ml-2.5 mt-1 sm:ml-0 sm:mt-0 sm:-mr-1.5">
                       {editable && (
                         <>
                           <IconBtn

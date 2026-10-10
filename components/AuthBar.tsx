@@ -4,34 +4,41 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useUser, signInWithGoogle, signOut } from '@/lib/auth'
 
-export default function AuthBar() {
+// tone="light" ใช้ซ้อนบนรูปพื้นเข้ม (หน้าแรก) / tone="dark" ใช้บนพื้นอ่อน (หน้าอื่น)
+export default function AuthBar({ tone = 'dark' }: { tone?: 'dark' | 'light' }) {
   const { user, loading } = useUser()
   const pathname = usePathname()
+  const light = tone === 'light'
 
-  const navClass = (href: string) =>
-    `pb-0.5 border-b-2 transition-colors ${
-      pathname === href ? 'border-moss text-ink' : 'border-transparent text-muted hover:text-ink'
-    }`
+  const navClass = (href: string) => {
+    const active = pathname === href
+    const color = light
+      ? active ? 'border-honey text-surface' : 'border-transparent text-surface/70 hover:text-surface'
+      : active ? 'border-moss text-ink' : 'border-transparent text-muted hover:text-ink'
+    return `py-2 border-b-2 transition-colors ${color}`
+  }
 
+  // มือถือ: แถวบน = โลโก้ + ปุ่มล็อกอิน, แถวล่าง = เมนู (ไม่ให้แน่นจนล้นจอ)
   return (
-    <header className="flex items-center justify-between gap-4 py-5">
-      <div className="flex items-baseline gap-6">
-        <Link href="/" className="text-xl font-semibold tracking-tight text-ink">
-          ไปเที่ยว
-        </Link>
-        <nav className="flex gap-5 text-sm font-medium">
-          <Link href="/" className={navClass('/')}>สร้างทริป</Link>
-          <Link href="/trips" className={navClass('/trips')}>ทริปของฉัน</Link>
-        </nav>
-      </div>
+    <header className="flex flex-wrap items-center gap-x-6 gap-y-1 py-4 sm:py-5">
+      <Link href="/" className={`font-display text-2xl font-medium tracking-tight py-1 ${light ? 'text-surface' : 'text-ink'}`}>
+        ไปเที่ยว
+      </Link>
 
-      <div className="flex items-center gap-3 text-sm">
+      <nav className="order-last w-full sm:order-none sm:w-auto flex gap-6 text-sm font-medium">
+        <Link href="/" className={navClass('/')}>สร้างทริป</Link>
+        <Link href="/trips" className={navClass('/trips')}>ทริปของฉัน</Link>
+      </nav>
+
+      <div className="ml-auto flex items-center gap-3 text-sm">
         {loading ? null : user ? (
           <>
-            <span className="hidden sm:inline text-muted max-w-[220px] truncate">{user.email}</span>
+            <span className={`hidden sm:inline max-w-[220px] truncate ${light ? 'text-surface/70' : 'text-muted'}`}>{user.email}</span>
             <button
               onClick={signOut}
-              className="px-4 py-1.5 rounded-full border border-line text-ink hover:bg-surface cursor-pointer"
+              className={`px-4 py-2 rounded-full border cursor-pointer ${
+                light ? 'border-surface/40 text-surface hover:bg-surface/10' : 'border-line text-ink hover:bg-surface'
+              }`}
             >
               ออกจากระบบ
             </button>
@@ -39,9 +46,12 @@ export default function AuthBar() {
         ) : (
           <button
             onClick={signInWithGoogle}
-            className="px-4 py-1.5 rounded-full bg-ink text-surface font-medium hover:bg-moss-deep cursor-pointer"
+            className={`px-4 py-2 rounded-full font-medium cursor-pointer ${
+              light ? 'bg-surface text-ink hover:bg-honey-soft' : 'bg-ink text-surface hover:bg-moss-deep'
+            }`}
           >
-            เข้าสู่ระบบด้วย Google
+            <span className="sm:hidden">เข้าสู่ระบบ</span>
+            <span className="hidden sm:inline">เข้าสู่ระบบด้วย Google</span>
           </button>
         )}
       </div>

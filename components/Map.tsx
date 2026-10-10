@@ -74,7 +74,7 @@ export default function TripMap({ places, hotels = [], area = '', className = 'h
   }, [])
 
   return (
-    <div className={`w-full ${className} rounded-2xl overflow-hidden border border-line bg-paper`}>
+    <div className={`isolate w-full ${className} rounded-2xl overflow-hidden border border-line bg-paper`}>
       {show && (
         <MapContainer center={[13.7563, 100.5018]} zoom={6} scrollWheelZoom={true} style={{ height: '100%', width: '100%' }}>
           <TileLayer

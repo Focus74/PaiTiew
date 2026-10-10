@@ -38,7 +38,7 @@ const label = 'block text-sm font-medium text-ink mb-1.5'
 const hint = 'text-xs text-muted mt-1.5'
 
 function Stepper({ value, min, max, onChange, unit }: { value: number; min: number; max: number; onChange: (n: number) => void; unit: string }) {
-  const round = 'h-10 w-10 rounded-full border border-line bg-surface text-ink flex items-center justify-center hover:border-moss disabled:opacity-40 cursor-pointer disabled:cursor-not-allowed'
+  const round = 'h-11 w-11 rounded-full border border-line bg-surface text-ink flex items-center justify-center hover:border-moss disabled:opacity-40 cursor-pointer disabled:cursor-not-allowed'
   return (
     <div className="flex items-center gap-3">
       <button type="button" className={round} onClick={() => onChange(value - 1)} disabled={value <= min} aria-label={`ลด${unit}`}>
@@ -101,7 +101,7 @@ export default function TripForm({ values: v, onChange, onSubmit, loading, submi
         </div>
         <div>
           <label htmlFor="startDate" className={label}>วันเริ่มเดินทาง (ไม่บังคับ)</label>
-          <input id="startDate" type="date" className={field} value={v.startDate} onChange={(e) => onChange({ startDate: e.target.value })} />
+          <input id="startDate" type="date" className={`${field} block`} value={v.startDate} onChange={(e) => onChange({ startDate: e.target.value })} />
         </div>
       </div>
 
@@ -141,7 +141,7 @@ export default function TripForm({ values: v, onChange, onSubmit, loading, submi
                 key={n}
                 type="button"
                 onClick={() => onChange({ total: String(n) })}
-                className={`px-3.5 py-1.5 rounded-full text-sm border cursor-pointer transition-colors ${
+                className={`px-4 py-2 rounded-full text-sm border cursor-pointer transition-colors ${
                   Number(v.total) === n ? 'bg-moss text-surface border-moss' : 'bg-surface border-line text-ink hover:border-moss'
                 }`}
               >
@@ -151,7 +151,7 @@ export default function TripForm({ values: v, onChange, onSubmit, loading, submi
             <button
               type="button"
               onClick={() => onChange({ total: '' })}
-              className={`px-3.5 py-1.5 rounded-full text-sm border cursor-pointer transition-colors ${
+              className={`px-4 py-2 rounded-full text-sm border cursor-pointer transition-colors ${
                 v.total === '' ? 'bg-moss text-surface border-moss' : 'bg-surface border-line text-ink hover:border-moss'
               }`}
             >
@@ -191,7 +191,7 @@ export default function TripForm({ values: v, onChange, onSubmit, loading, submi
               type="button"
               aria-pressed={v.styles.includes(s)}
               onClick={() => toggleStyle(s)}
-              className={`px-4 py-2 rounded-full text-sm border cursor-pointer transition-colors ${
+              className={`px-4 py-2.5 rounded-full text-sm border cursor-pointer transition-colors ${
                 v.styles.includes(s) ? 'bg-ink text-surface border-ink' : 'bg-surface border-line text-ink hover:border-ink'
               }`}
             >
@@ -208,20 +208,23 @@ export default function TripForm({ values: v, onChange, onSubmit, loading, submi
         />
       </div>
 
-      <button
-        type="submit"
-        disabled={loading}
-        className="w-full py-4 rounded-full bg-moss hover:bg-moss-deep text-surface font-medium text-base transition-colors disabled:opacity-60 cursor-pointer flex items-center justify-center gap-2"
-      >
-        {loading ? (
-          <>
-            <SpinnerIcon />
-            <span>กำลังวางแผน อาจใช้เวลาสักครู่</span>
-          </>
-        ) : (
-          submitText
-        )}
-      </button>
+      {/* มือถือ: ปุ่มติดขอบล่างจอ ไม่ต้องเลื่อนลงไปสุดฟอร์ม */}
+      <div className="sticky bottom-0 z-20 -mx-5 px-5 pt-6 pb-[max(1rem,env(safe-area-inset-bottom))] bg-gradient-to-t from-paper from-70% to-transparent sm:static sm:mx-0 sm:p-0 sm:bg-none">
+        <button
+          type="submit"
+          disabled={loading}
+          className="w-full py-4 rounded-full bg-moss hover:bg-moss-deep text-surface font-medium text-base transition-colors disabled:opacity-60 cursor-pointer flex items-center justify-center gap-2 shadow-sm sm:shadow-none"
+        >
+          {loading ? (
+            <>
+              <SpinnerIcon />
+              <span>กำลังวางแผน อาจใช้เวลาสักครู่</span>
+            </>
+          ) : (
+            submitText
+          )}
+        </button>
+      </div>
     </form>
   )
 }

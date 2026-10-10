@@ -33,14 +33,14 @@ export default function RefinePanel({ onSave, saving, saved, loggedIn, onRefine,
           <p className="text-sm text-muted">ถูกใจแล้วบันทึกไว้ได้เลย ยังไม่ใช่ก็ปรับต่อได้</p>
         </div>
         {saved ? (
-          <Link href="/trips" className="px-5 py-2.5 rounded-full bg-moss-soft text-moss-deep text-sm font-medium">
+          <Link href="/trips" className="px-5 py-3 rounded-full bg-moss-soft text-moss-deep text-sm font-medium">
             บันทึกแล้ว ดูในทริปของฉัน
           </Link>
         ) : (
           <button
             onClick={onSave}
             disabled={saving}
-            className="px-5 py-2.5 rounded-full bg-moss hover:bg-moss-deep text-surface text-sm font-medium disabled:opacity-60 cursor-pointer"
+            className="px-5 py-3 rounded-full bg-moss hover:bg-moss-deep text-surface text-sm font-medium disabled:opacity-60 cursor-pointer"
           >
             {saving ? 'กำลังบันทึก' : loggedIn ? 'บันทึกทริปนี้' : 'เข้าสู่ระบบเพื่อบันทึก'}
           </button>
@@ -57,7 +57,7 @@ export default function RefinePanel({ onSave, saving, saved, loggedIn, onRefine,
               key={q}
               onClick={() => submit(q)}
               disabled={refining}
-              className="px-3.5 py-1.5 rounded-full text-sm border border-line bg-paper text-ink hover:border-moss disabled:opacity-50 cursor-pointer"
+              className="px-4 py-2 rounded-full text-sm border border-line bg-paper text-ink hover:border-moss disabled:opacity-50 cursor-pointer"
             >
               {q}
             </button>
@@ -76,12 +76,12 @@ export default function RefinePanel({ onSave, saving, saved, loggedIn, onRefine,
             onChange={(e) => setText(e.target.value)}
             disabled={refining}
             placeholder="เช่น อยากได้ร้านซีฟู้ดเพิ่ม วันที่ 2 ไม่อยากขับรถไกล"
-            className="flex-1 min-w-0 px-4 py-2.5 rounded-full border border-line bg-paper text-ink placeholder:text-muted/70 focus:border-moss outline-none"
+            className="flex-1 min-w-0 px-4 py-3 rounded-full border border-line bg-paper text-ink placeholder:text-muted/70 focus:border-moss outline-none"
           />
           <button
             type="submit"
             disabled={refining || !text.trim()}
-            className="px-5 py-2.5 rounded-full bg-ink text-surface text-sm font-medium hover:bg-moss-deep disabled:opacity-50 cursor-pointer flex items-center gap-2"
+            className="px-5 py-3 rounded-full bg-ink text-surface text-sm font-medium hover:bg-moss-deep disabled:opacity-50 cursor-pointer flex items-center gap-2 shrink-0"
           >
             {refining ? (
               <>
