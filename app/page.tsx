@@ -230,8 +230,8 @@ export default function HomePage() {
     }
   }
 
-  // ยังไม่มีแผน = หน้าแรกแบบเต็ม (รูปเปิด + ปลายทางแนะนำ) มีแผนแล้วโชว์เฉพาะผลลัพธ์
-  const landing = !plan
+  // ยังไม่มีแผน หรือกำลังแก้ข้อมูลเพื่อสร้างใหม่ = หน้าแรกแบบเต็ม (ส่วนหัว + ปลายทางแนะนำ + ฟอร์ม)
+  const landing = !plan || formOpen
 
   // แตะปลายทางแนะนำ: ใส่ชื่อลงฟอร์มแล้วเลื่อนลงไปที่ฟอร์ม
   const pickDestination = (name: string) => {
@@ -271,7 +271,10 @@ export default function HomePage() {
               {used.budget.total ? <span className="text-muted"> งบ ฿{used.budget.total.toLocaleString('en-US')}</span> : null}
             </p>
             <button
-              onClick={() => setFormOpen(true)}
+              onClick={() => {
+                setFormOpen(true)
+                window.scrollTo({ top: 0, behavior: 'smooth' })
+              }}
               className="px-4 py-2 rounded-full border border-line text-sm text-ink hover:bg-surface cursor-pointer"
             >
               แก้ข้อมูลแล้วสร้างใหม่
