@@ -117,8 +117,8 @@ export default function TripForm({ values: v, onChange, onSubmit, loading, submi
       </div>
 
       {/* งบประมาณ */}
-      <fieldset className="space-y-4 rounded-2xl bg-moss-soft/50 p-5">
-        <legend className="px-1 text-sm font-medium text-ink">งบประมาณ</legend>
+      <div role="group" aria-labelledby="budget-heading" className="space-y-4 rounded-2xl bg-moss-soft/50 p-5">
+        <p id="budget-heading" className="text-sm font-semibold text-ink">งบประมาณ</p>
 
         <div>
           <label htmlFor="total" className={label}>งบรวมทั้งทริป (บาท)</label>
@@ -179,7 +179,7 @@ export default function TripForm({ values: v, onChange, onSubmit, loading, submi
             />
           </div>
         </div>
-      </fieldset>
+      </div>
 
       {/* สไตล์ */}
       <div>
