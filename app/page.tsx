@@ -255,6 +255,7 @@ export default function HomePage() {
         {/* ฟอร์ม / สรุปสิ่งที่เลือก */}
         {formOpen || !used ? (
           <section id="plan-form" className="scroll-mt-6 max-w-2xl pt-14 sm:pt-24 pb-6 sm:pb-10">
+            <p className="mb-2 text-sm font-medium tracking-wide text-moss">✦ เริ่มต้นการเดินทาง</p>
             <h2 className="font-display text-3xl sm:text-4xl leading-[1.35] font-medium text-ink">
               ออกแบบทริปของคุณ
             </h2>
@@ -264,7 +265,7 @@ export default function HomePage() {
             <TripForm values={form} onChange={patch} onSubmit={handleGenerate} loading={loading} />
           </section>
         ) : (
-          <section className="flex flex-wrap items-center justify-between gap-3 py-4 mb-8 border-y border-line">
+          <section className="glass rounded-3xl flex flex-wrap items-center justify-between gap-3 px-5 py-4 mb-8">
             <p className="text-ink">
               <span className="font-semibold">{used.destination}</span>
               <span className="text-muted"> {used.days} วัน {used.people} คน</span>
@@ -275,7 +276,7 @@ export default function HomePage() {
                 setFormOpen(true)
                 window.scrollTo({ top: 0, behavior: 'smooth' })
               }}
-              className="px-4 py-2 rounded-full border border-line text-sm text-ink hover:bg-surface cursor-pointer"
+              className="px-4 py-2 rounded-full border border-white/80 bg-white/70 text-sm text-ink hover:bg-white cursor-pointer"
             >
               แก้ข้อมูลแล้วสร้างใหม่
             </button>

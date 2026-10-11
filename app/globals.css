@@ -1,18 +1,21 @@
 @import "tailwindcss";
 
-/* โทนสีแนว cozy: ผ้าลินินหมอก + เขียวมอส + น้ำผึ้งเล็กน้อย */
+/* ธีม "ท้องฟ้าพลบค่ำ": ลาเวนเดอร์ละมุน + แสงเรืองสีม่วง/ชมพู/ฟ้า + ประกายดาว */
 @theme {
-  --color-paper: #f0efea;
-  --color-surface: #faf9f6;
-  --color-ink: #232b27;
-  --color-muted: #6b746e;
-  --color-line: #dad9d1;
-  --color-moss: #3e6a58;
-  --color-moss-deep: #2f5344;
-  --color-moss-soft: #dce8e1;
-  --color-honey: #d9a441;
-  --color-honey-soft: #f5e8c8;
-  --color-danger: #a8483f;
+  --color-paper: #f3effc;
+  --color-surface: #fdfcff;
+  --color-ink: #261f4d;
+  --color-muted: #675f8a;
+  --color-line: #ddd5f3;
+  --color-moss: #6a58d6;
+  --color-moss-deep: #4f3fb8;
+  --color-moss-soft: #e9e4fb;
+  --color-honey: #ffc27a;
+  --color-honey-soft: #ffe9cf;
+  --color-rose: #ffa8cf;
+  --color-mint: #9fe8d4;
+  --color-sky: #9ccfff;
+  --color-danger: #c04a62;
   --font-sans: var(--font-plex), "Noto Sans Thai", system-ui, sans-serif;
   --font-display: var(--font-serif-th), "Noto Serif Thai", Georgia, serif;
 }
@@ -23,6 +26,7 @@
 
 html {
   scroll-behavior: smooth;
+  background: var(--color-paper);
 }
 
 html {
@@ -31,7 +35,7 @@ html {
 
 body {
   overflow-x: clip; /* กันหน้าเลื่อนซ้าย-ขวาบนมือถือ */
-  background: var(--color-paper);
+  background: transparent;
   color: var(--color-ink);
   font-family: var(--font-sans);
   line-height: 1.65;
@@ -60,16 +64,17 @@ body {
 
 /* Leaflet popup ให้เข้ากับธีม */
 .leaflet-popup-content-wrapper {
-  border-radius: 14px;
+  border-radius: 18px;
+  box-shadow: 0 12px 30px -10px rgba(79, 63, 184, 0.45);
   font-family: var(--font-sans);
   color: var(--color-ink);
 }
 .leaflet-popup-content { margin: 12px 14px; }
-.leaflet-container { font-family: var(--font-sans); background: var(--color-paper); }
+.leaflet-container { font-family: var(--font-sans); background: #ece7fa; }
 
 /* ปรับสีแผนที่ OpenStreetMap ให้จางและนุ่มลง เข้ากับธีม (ไม่ต้องใช้คีย์ของผู้ให้บริการแผนที่อื่น) */
 .soft-tiles {
-  filter: saturate(0.5) contrast(0.92) brightness(1.04) sepia(0.12);
+  filter: saturate(0.55) contrast(0.93) brightness(1.04) hue-rotate(-12deg);
 }
 
 /* มือถือ: ตัดหน่วงตอนแตะ และไม่ให้เกิดแถบสีวาบตอนกดปุ่ม */
@@ -91,4 +96,111 @@ input[type="date"] {
   -webkit-appearance: none;
   min-height: 3.25rem;
   text-align: left;
+}
+
+
+/* ============ โลกแฟนตาซี: ท้องฟ้าออโรร่า + ประกายดาว ============ */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  background:
+    radial-gradient(52rem 38rem at 8% -8%, rgba(185, 160, 255, 0.5), transparent 62%),
+    radial-gradient(46rem 34rem at 98% 6%, rgba(255, 170, 214, 0.42), transparent 62%),
+    radial-gradient(46rem 38rem at 72% 108%, rgba(150, 212, 255, 0.45), transparent 62%),
+    radial-gradient(38rem 30rem at -2% 92%, rgba(168, 240, 214, 0.38), transparent 62%);
+}
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='360' height='360' viewBox='0 0 360 360'%3E%3Cg%3E%3Cpath fill='%238a6be8' fill-opacity='.55' d='M40 52l2.2 6.8 6.8 2.2-6.8 2.2L40 70l-2.2-6.8L31 61l6.8-2.2z'/%3E%3Cpath fill='%23ff8fc4' fill-opacity='.55' d='M300 96l1.8 5.6 5.6 1.8-5.6 1.8L300 111l-1.8-5.8-5.6-1.8 5.6-1.8z'/%3E%3Cpath fill='%23f0a04b' fill-opacity='.6' d='M170 250l1.6 5 5 1.6-5 1.6-1.6 5-1.6-5-5-1.6 5-1.6z'/%3E%3Cpath fill='%2360b4f0' fill-opacity='.55' d='M92 310l1.6 5 5 1.6-5 1.6-1.6 5-1.6-5-5-1.6 5-1.6z'/%3E%3Cpath fill='%238a6be8' fill-opacity='.5' d='M250 330l1.4 4.2 4.2 1.4-4.2 1.4-1.4 4.2-1.4-4.2-4.2-1.4 4.2-1.4z'/%3E%3Ccircle cx='128' cy='120' r='1.6' fill='%238a6be8' fill-opacity='.5'/%3E%3Ccircle cx='330' cy='220' r='1.5' fill='%23ff8fc4' fill-opacity='.55'/%3E%3Ccircle cx='20' cy='200' r='1.4' fill='%2360b4f0' fill-opacity='.55'/%3E%3Ccircle cx='214' cy='40' r='1.4' fill='%23f0a04b' fill-opacity='.6'/%3E%3C/g%3E%3C/svg%3E"), url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='360' height='360' viewBox='0 0 360 360'%3E%3Cg%3E%3Cpath fill='%238a6be8' fill-opacity='.55' d='M40 52l2.2 6.8 6.8 2.2-6.8 2.2L40 70l-2.2-6.8L31 61l6.8-2.2z'/%3E%3Cpath fill='%23ff8fc4' fill-opacity='.55' d='M300 96l1.8 5.6 5.6 1.8-5.6 1.8L300 111l-1.8-5.8-5.6-1.8 5.6-1.8z'/%3E%3Cpath fill='%23f0a04b' fill-opacity='.6' d='M170 250l1.6 5 5 1.6-5 1.6-1.6 5-1.6-5-5-1.6 5-1.6z'/%3E%3Cpath fill='%2360b4f0' fill-opacity='.55' d='M92 310l1.6 5 5 1.6-5 1.6-1.6 5-1.6-5-5-1.6 5-1.6z'/%3E%3Cpath fill='%238a6be8' fill-opacity='.5' d='M250 330l1.4 4.2 4.2 1.4-4.2 1.4-1.4 4.2-1.4-4.2-4.2-1.4 4.2-1.4z'/%3E%3Ccircle cx='128' cy='120' r='1.6' fill='%238a6be8' fill-opacity='.5'/%3E%3Ccircle cx='330' cy='220' r='1.5' fill='%23ff8fc4' fill-opacity='.55'/%3E%3Ccircle cx='20' cy='200' r='1.4' fill='%2360b4f0' fill-opacity='.55'/%3E%3Ccircle cx='214' cy='40' r='1.4' fill='%23f0a04b' fill-opacity='.6'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: 360px 360px, 571px 571px;
+  background-position: 0 0, 170px 110px;
+  animation: twinkle 5s ease-in-out infinite;
+}
+@keyframes twinkle {
+  0%, 100% { opacity: 0.55; }
+  50% { opacity: 1; }
+}
+@keyframes float-y {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-16px) rotate(3deg); }
+}
+@keyframes drift {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(18px, -12px) scale(1.06); }
+}
+@keyframes sparkle {
+  0%, 100% { opacity: 0.25; transform: scale(0.7) rotate(0deg); }
+  50% { opacity: 1; transform: scale(1.1) rotate(25deg); }
+}
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.float-y { animation: float-y 7s ease-in-out infinite; }
+.drift { animation: drift 12s ease-in-out infinite; }
+.sparkle { animation: sparkle 3.6s ease-in-out infinite; }
+.fade-up { animation: fade-up 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+
+/* การ์ดกระจกใส */
+.glass {
+  background: rgba(255, 255, 255, 0.62);
+  -webkit-backdrop-filter: blur(18px) saturate(1.4);
+  backdrop-filter: blur(18px) saturate(1.4);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  box-shadow: 0 12px 40px -14px rgba(106, 88, 214, 0.32), inset 0 1px 0 rgba(255, 255, 255, 0.85);
+}
+
+/* ท้องฟ้ายามค่ำสำหรับส่วนหัว */
+.night-sky {
+  background:
+    radial-gradient(60% 55% at 85% 10%, rgba(255, 190, 220, 0.35), transparent 70%),
+    radial-gradient(55% 50% at 8% 90%, rgba(120, 190, 255, 0.28), transparent 70%),
+    linear-gradient(165deg, #1a1450 0%, #35278a 42%, #6d47c4 72%, #c76fb8 100%);
+}
+.night-stars {
+  background-image:
+    radial-gradient(1.5px 1.5px at 12% 22%, #fff, transparent 60%),
+    radial-gradient(1.2px 1.2px at 28% 64%, #ffe9cf, transparent 60%),
+    radial-gradient(1.8px 1.8px at 46% 18%, #fff, transparent 60%),
+    radial-gradient(1.2px 1.2px at 63% 52%, #d9ccff, transparent 60%),
+    radial-gradient(1.6px 1.6px at 78% 28%, #fff, transparent 60%),
+    radial-gradient(1.2px 1.2px at 90% 70%, #ffd6ec, transparent 60%),
+    radial-gradient(1.4px 1.4px at 8% 80%, #fff, transparent 60%),
+    radial-gradient(1.2px 1.2px at 54% 86%, #cfe6ff, transparent 60%),
+    radial-gradient(1.4px 1.4px at 36% 40%, #fff, transparent 60%),
+    radial-gradient(1.2px 1.2px at 70% 8%, #ffe9cf, transparent 60%);
+  animation: twinkle 4s ease-in-out infinite;
+}
+.text-aurora {
+  background: linear-gradient(95deg, #ffe0b8 0%, #ffb3dc 45%, #b8d4ff 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* ปุ่มหลัก (bg-moss ทั้งเว็บ) ให้เป็นไล่สีเรืองแสง */
+.bg-moss {
+  background-image: linear-gradient(135deg, #5b4bd0 0%, #8a5be0 55%, #c25fd0 100%);
+  box-shadow: 0 10px 26px -10px rgba(106, 88, 214, 0.7);
+  transition: filter 0.2s, transform 0.2s, box-shadow 0.2s;
+}
+.bg-moss:hover:not(:disabled) {
+  filter: brightness(1.07) saturate(1.1);
+  box-shadow: 0 14px 32px -10px rgba(138, 91, 224, 0.8);
+}
+
+/* ช่องกรอกข้อมูล: เรืองแสงเบาๆ ตอนโฟกัส */
+input:focus, textarea:focus {
+  box-shadow: 0 0 0 4px rgba(138, 91, 224, 0.16);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body::after, .night-stars, .float-y, .drift, .sparkle, .fade-up { animation: none; }
 }
