@@ -2,6 +2,9 @@ import { NextResponse } from 'next/server'
 import { refinePlan, normalizePlan } from '@/lib/gemini'
 import { parseInput, names } from '@/lib/apiInput'
 
+// ทริปยาวใช้เวลานานขึ้น จึงขยายเวลาสูงสุดของฟังก์ชันเป็น 60 วินาที
+export const maxDuration = 60
+
 export async function POST(request: Request) {
   try {
     const body = await request.json()
