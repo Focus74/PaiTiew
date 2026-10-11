@@ -1,4 +1,5 @@
 import { GoogleGenAI, ApiError } from '@google/genai'
+import { MAX_DAYS } from '@/lib/limits'
 import type { Place, Hotel, TripPlan, TripGuide } from '@/lib/types'
 
 const apiKey = process.env.GEMINI_API_KEY || ''
@@ -22,7 +23,7 @@ const MODELS = (process.env.GEMINI_MODELS || 'gemini-3.5-flash,gemini-3.1-flash-
   .filter(Boolean)
 
 const MAX_ATTEMPTS_PER_MODEL = 2
-const TOTAL_BUDGET_MS = 25_000
+const TOTAL_BUDGET_MS = 55_000 // ต่อการเรียก AI 1 ครั้ง (ฟังก์ชันบน Vercel ตั้งไว้ 60 วินาที)
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms))
 
@@ -47,7 +48,7 @@ async function callGemini(prompt: string, responseSchema: any): Promise<any> {
         const res = await ai.models.generateContent({
           model,
           contents: prompt,
-          config: { responseMimeType: 'application/json', temperature: 0.4, responseSchema },
+          config: { responseMimeType: 'application/json', temperature: 0.4, maxOutputTokens: 32768, responseSchema },
         })
         const text = res.text
         if (!text) throw new Error('Empty response')
@@ -144,7 +145,7 @@ export function normalizePlan(raw: any): TripPlan {
   return {
     tripTitle: String(raw.tripTitle ?? '').slice(0, 200),
     summary: String(raw.summary ?? '').slice(0, 600),
-    itinerary: raw.itinerary.slice(0, 7).map((d: any, i: number) => ({
+    itinerary: raw.itinerary.slice(0, MAX_DAYS).map((d: any, i: number) => ({
       day: Number(d?.day) || i + 1,
       title: String(d?.title ?? '').slice(0, 160),
       estimatedCost: Math.max(Number(d?.estimatedCost) || 0, 0),
@@ -180,17 +181,72 @@ const RULES = `- lat/lng ต้องเป็นพิกัดจริงข�
 - ค่าใช้จ่ายทั้งหมดต้องสมเหตุสมผลกับงบที่ให้ ตัวเลขเป็นการประมาณการ`
 
 // ---------- 1) แผนเที่ยว + โรงแรม ----------
-export async function generateTravelPlan(input: TravelPromptInput): Promise<TripPlan> {
-  const prompt = `
-คุณคือ AI วางแผนท่องเที่ยวในประเทศไทย สร้างแผนเที่ยว
-${basics(input)}
-- แต่ละวันมี 3-4 สถานที่ เรียงตามเส้นทางที่เดินทางต่อเนื่องได้
-- estimatedCost = ค่ากิน เที่ยว และเดินทางในพื้นที่ต่อวัน รวมทั้งกลุ่ม (ไม่รวมที่พัก และไม่รวมการเดินทางจากต้นทาง) เป็นบาท
-- แนะนำที่พัก 3 แห่งที่มีอยู่จริง ราคาไม่เกินเพดานที่ให้ไว้ (ถ้ามี) pricePerNight เป็นบาทต่อคืน ทั้งห้อง
-${RULES}
-ตอบเป็น JSON ตาม schema เท่านั้น`
+const CHUNK_DAYS = 7
+const CHUNK_SCHEMA = {
+  type: 'object',
+  properties: { itinerary: PLAN_SCHEMA.properties.itinerary },
+  required: ['itinerary'],
+}
 
-  return normalizePlan(await callGemini(prompt, PLAN_SCHEMA))
+const PLAN_RULES = `- แต่ละวันมี 3-4 สถานที่ เรียงตามเส้นทางที่เดินทางต่อเนื่องได้
+- estimatedCost = ค่ากิน เที่ยว และเดินทางในพื้นที่ต่อวัน รวมทั้งกลุ่ม (ไม่รวมที่พัก และไม่รวมการเดินทางจากต้นทาง) เป็นบาท`
+
+const HOTEL_RULE = `- แนะนำที่พัก 3 แห่งที่มีอยู่จริง ราคาไม่เกินเพดานที่ให้ไว้ (ถ้ามี) pricePerNight เป็นบาทต่อคืน ทั้งห้อง`
+
+export async function generateTravelPlan(input: TravelPromptInput): Promise<TripPlan> {
+  // ทริปสั้น: เรียก AI ครั้งเดียว
+  if (input.days <= CHUNK_DAYS) {
+    const prompt = `
+    คุณคือ AI วางแผนท่องเที่ยวในประเทศไทย สร้างแผนเที่ยว
+    ${basics(input)}
+    ${PLAN_RULES}
+    ${HOTEL_RULE}
+    ${RULES}
+    ตอบเป็น JSON ตาม schema เท่านั้น`
+    return normalizePlan(await callGemini(prompt, PLAN_SCHEMA))
+  }
+
+  // ทริปยาว: แบ่งเป็นช่วงละ 7 วัน ให้ AI สร้างพร้อมกัน แล้วนำมาต่อกัน (ไม่ให้หมดเวลา)
+  const ranges: [number, number][] = []
+  for (let s = 1; s <= input.days; s += CHUNK_DAYS) ranges.push([s, Math.min(s + CHUNK_DAYS - 1, input.days)])
+
+  const results = await Promise.all(
+    ranges.map(([from, to], idx) => {
+      const first = idx === 0
+      const prompt = `
+      คุณคือ AI วางแผนท่องเที่ยวในประเทศไทย สร้างแผนเที่ยว
+      ${basics(input)}
+      ทริปนี้ยาว ${input.days} วัน ตอนนี้ให้สร้างเฉพาะ "วันที่ ${from} ถึงวันที่ ${to}" (${to - from + 1} วัน) ใส่ field day เป็นเลขวันจริงของทริป
+      ช่วงอื่นของทริปมีการสร้างแยกกัน ให้เลือกสถานที่หลากหลาย กระจายไปตามช่วงเวลาของทริป ไม่เน้นที่เดียวซ้ำๆ
+      ${PLAN_RULES}
+      ${first ? HOTEL_RULE : '- ไม่ต้องแนะนำที่พักในช่วงนี้'}
+      ${RULES}
+      ตอบเป็น JSON ตาม schema เท่านั้น`
+      return callGemini(prompt, first ? PLAN_SCHEMA : CHUNK_SCHEMA)
+    })
+  )
+
+  // ต่อทุกช่วงเข้าด้วยกัน เรียงเลขวันใหม่ และตัดสถานที่ซ้ำข้ามช่วง
+  const seen = new Set<string>()
+  const itinerary = results
+    .flatMap((r) => (Array.isArray(r?.itinerary) ? r.itinerary : []))
+    .map((d: any, i: number) => ({
+      ...d,
+      day: i + 1,
+      places: (Array.isArray(d?.places) ? d.places : []).filter((p: any) => {
+        const key = String(p?.name ?? '').trim().toLowerCase()
+        if (!key || seen.has(key)) return false
+        seen.add(key)
+        return true
+      }),
+    }))
+
+  return normalizePlan({
+    tripTitle: results[0]?.tripTitle,
+    summary: results[0]?.summary,
+    itinerary,
+    hotels: results[0]?.hotels,
+  })
 }
 
 // ---------- 2) ปรับแผนทั้งชุดตามที่ผู้ใช้บอก (คงสิ่งที่ชอบไว้) ----------

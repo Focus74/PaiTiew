@@ -1,3 +1,4 @@
+import { MAX_DAYS } from '@/lib/limits'
 import { normalizeBudget, budgetToText } from '@/lib/budget'
 import type { TravelPromptInput } from '@/lib/gemini'
 
@@ -5,7 +6,7 @@ import type { TravelPromptInput } from '@/lib/gemini'
 export function parseInput(body: any): TravelPromptInput | null {
   const destination = String(body?.destination ?? '').trim().slice(0, 100)
   if (!destination) return null
-  const days = Math.min(Math.max(Number(body?.days) || 1, 1), 7)
+  const days = Math.min(Math.max(Number(body?.days) || 1, 1), MAX_DAYS)
   const budget = normalizeBudget(body?.budget)
   return {
     destination,
