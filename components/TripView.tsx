@@ -47,7 +47,7 @@ function IconBtn({
   children: ReactNode
 }) {
   const cls = `h-11 w-11 sm:h-9 sm:w-9 rounded-full flex items-center justify-center transition-colors cursor-pointer ${
-    active ? 'bg-moss-soft text-moss-deep' : 'text-muted hover:bg-moss-soft hover:text-moss-deep'
+    active ? 'bg-rose/30 text-[#d6457f]' : 'text-muted hover:bg-moss-soft hover:text-moss-deep'
   }`
   if (href) {
     return (
@@ -97,11 +97,11 @@ export default function TripView({ plan, guide, area, origin, days, budgetTotal,
       <div className="min-w-0 space-y-10 sm:space-y-12">
         {/* ชื่อทริป + งบ */}
         <section className="space-y-4">
-          <h2 className="text-2xl sm:text-3xl font-semibold leading-tight tracking-tight text-ink">{plan.tripTitle}</h2>
+          <h2 className="font-display text-2xl sm:text-4xl font-medium leading-tight tracking-tight text-ink"><span aria-hidden="true" className="mr-2 text-[#ffb36b]">✦</span>{plan.tripTitle}</h2>
           <p className="text-muted max-w-prose">{plan.summary}</p>
 
           {estimate > 0 && (
-            <div className="rounded-2xl bg-moss-soft/60 p-4 space-y-2.5">
+            <div className="glass rounded-3xl p-5 space-y-2.5">
               <div className="flex flex-wrap items-baseline justify-between gap-x-4">
                 <p className="text-ink">
                   ค่าใช้จ่ายโดยประมาณ <span className="text-xl font-semibold">{baht(estimate)}</span>
@@ -137,7 +137,7 @@ export default function TripView({ plan, guide, area, origin, days, budgetTotal,
               type="button"
               onClick={() => setMapOpen((o) => !o)}
               aria-expanded={mapOpen}
-              className="w-full flex items-center justify-center gap-2 py-3 rounded-full border border-line bg-surface text-ink text-sm font-medium cursor-pointer hover:border-moss"
+              className="w-full flex items-center justify-center gap-2 py-3 rounded-full glass text-ink text-sm font-medium cursor-pointer hover:border-moss"
             >
               <MapIcon />
               {mapOpen ? 'ซ่อนแผนที่' : 'ดูแผนที่ทริป'}
@@ -150,7 +150,7 @@ export default function TripView({ plan, guide, area, origin, days, budgetTotal,
         <section className="space-y-8" aria-label="แผนรายวัน">
           {plan.itinerary.map((day, di) => (
             <div key={day.day}>
-              <div className="sticky top-0 z-10 -mx-5 px-5 sm:mx-0 sm:px-0 pt-2 flex flex-wrap items-baseline justify-between gap-2 pb-2 border-b border-line bg-paper/95 backdrop-blur-sm">
+              <div className="sticky top-2 z-10 mb-3 flex flex-wrap items-baseline justify-between gap-2 rounded-2xl glass px-4 py-2.5">
                 <h3 className="flex items-baseline gap-3 min-w-0">
                   <span className="h-2.5 w-2.5 rounded-full shrink-0 translate-y-[-1px]" style={{ background: dayColor(di) }} />
                   <span className="text-lg font-semibold text-ink">วันที่ {day.day}</span>
@@ -159,14 +159,14 @@ export default function TripView({ plan, guide, area, origin, days, budgetTotal,
                 {day.estimatedCost > 0 && <span className="text-sm text-muted">ประมาณ {baht(day.estimatedCost)}</span>}
               </div>
 
-              <ul className="divide-y divide-line/70">
+              <ul className="space-y-3">
                 {day.places.map((place, pi) => {
                   const key = `p-${di}-${pi}`
                   const swapping = editable?.swappingKey === key
                   return (
                     <li
                       key={place.name}
-                      className={`swap-in grid grid-cols-[1.5rem_minmax(0,1fr)] sm:grid-cols-[1.5rem_minmax(0,1fr)_auto] gap-x-3 py-3.5 ${swapping ? 'opacity-50' : ''}`}
+                      className={`swap-in grid grid-cols-[1.5rem_minmax(0,1fr)] sm:grid-cols-[1.5rem_minmax(0,1fr)_auto] gap-x-3 rounded-2xl glass px-4 py-3.5 transition-transform hover:-translate-y-0.5 ${swapping ? 'opacity-50' : ''}`}
                     >
                       <span
                         className="mt-0.5 h-6 w-6 rounded-full shrink-0 flex items-center justify-center text-xs font-semibold text-surface"
@@ -213,13 +213,13 @@ export default function TripView({ plan, guide, area, origin, days, budgetTotal,
               <h3 className="text-lg font-semibold text-ink">ที่พักแนะนำ</h3>
               <p className="text-xs text-muted">ราคาเป็นการประมาณการจาก AI กด &quot;ตรวจสอบ&quot; เพื่อดูข้อมูลจริงก่อนจอง</p>
             </div>
-            <ul className="divide-y divide-line/70">
+            <ul className="space-y-3">
               {plan.hotels.map((h, hi) => {
                 const key = `h-${hi}`
                 const swapping = editable?.swappingKey === key
                 return (
-                  <li key={h.name} className={`swap-in grid grid-cols-[1.5rem_minmax(0,1fr)] sm:grid-cols-[1.5rem_minmax(0,1fr)_auto] gap-x-3 py-3.5 ${swapping ? 'opacity-50' : ''}`}>
-                    <span className="mt-0.5 h-6 w-6 rounded-lg shrink-0 flex items-center justify-center bg-honey text-surface">
+                  <li key={h.name} className={`swap-in grid grid-cols-[1.5rem_minmax(0,1fr)] sm:grid-cols-[1.5rem_minmax(0,1fr)_auto] gap-x-3 rounded-2xl glass px-4 py-3.5 transition-transform hover:-translate-y-0.5 ${swapping ? 'opacity-50' : ''}`}>
+                    <span className="mt-0.5 h-6 w-6 rounded-lg shrink-0 flex items-center justify-center bg-gradient-to-br from-[#ffb36b] to-[#ff8fc4] text-white">
                       <BedIcon className="h-3.5 w-3.5" />
                     </span>
                     <div className="min-w-0">

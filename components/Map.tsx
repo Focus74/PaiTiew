@@ -25,7 +25,7 @@ function numberIcon(color: string, num: number) {
   if (!iconCache[key]) {
     iconCache[key] = L.divIcon({
       className: '',
-      html: `<div style="width:28px;height:28px;border-radius:50%;background:${color};color:#fff;font:600 13px system-ui,sans-serif;display:flex;align-items:center;justify-content:center;border:2px solid #faf9f6;box-shadow:0 1px 5px rgba(35,43,39,.35)">${num}</div>`,
+      html: `<div style="width:28px;height:28px;border-radius:50%;background:${color};color:#fff;font:600 13px system-ui,sans-serif;display:flex;align-items:center;justify-content:center;border:2px solid #fff;box-shadow:0 0 0 3px ${color}33,0 4px 12px rgba(79,63,184,.45)">${num}</div>`,
       iconSize: [28, 28],
       iconAnchor: [14, 14],
       popupAnchor: [0, -14],
@@ -36,7 +36,7 @@ function numberIcon(color: string, num: number) {
 
 const hotelIcon = L.divIcon({
   className: '',
-  html: `<div style="width:30px;height:30px;border-radius:9px;background:#d9a441;color:#fff;display:flex;align-items:center;justify-content:center;border:2px solid #faf9f6;box-shadow:0 1px 5px rgba(35,43,39,.35)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18V7M3 14h18v4M21 14v-2a3 3 0 0 0-3-3h-7v5"/><circle cx="7" cy="11" r="1.6"/></svg></div>`,
+  html: `<div style="width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,#ffb36b,#ff8fc4);color:#fff;display:flex;align-items:center;justify-content:center;border:2px solid #fff;box-shadow:0 0 0 3px #ffb36b55,0 4px 12px rgba(79,63,184,.45)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18V7M3 14h18v4M21 14v-2a3 3 0 0 0-3-3h-7v5"/><circle cx="7" cy="11" r="1.6"/></svg></div>`,
   iconSize: [30, 30],
   iconAnchor: [15, 15],
   popupAnchor: [0, -15],
@@ -74,7 +74,7 @@ export default function TripMap({ places, hotels = [], area = '', className = 'h
   }, [])
 
   return (
-    <div className={`isolate w-full ${className} rounded-2xl overflow-hidden border border-line bg-paper`}>
+    <div className={`isolate w-full ${className} rounded-3xl overflow-hidden border border-white/80 bg-paper shadow-[0_18px_50px_-20px_rgba(106,88,214,0.55)]`}>
       {show && (
         <MapContainer center={[13.7563, 100.5018]} zoom={6} scrollWheelZoom={true} style={{ height: '100%', width: '100%' }}>
           <TileLayer
@@ -100,7 +100,7 @@ export default function TripMap({ places, hotels = [], area = '', className = 'h
                     target="_blank"
                     rel="noopener noreferrer"
                     className={btn}
-                    style={{ background: '#3e6a58', color: '#fff' }}
+                    style={{ background: 'linear-gradient(135deg,#5b4bd0,#8a5be0)', color: '#fff' }}
                   >
                     นำทาง
                   </a>
@@ -113,7 +113,7 @@ export default function TripMap({ places, hotels = [], area = '', className = 'h
             <Marker key={`hotel-${h.name}-${i}`} position={[h.lat, h.lng]} icon={hotelIcon}>
               <Popup>
                 <div>
-                  <div className="text-xs font-medium" style={{ color: '#a97a1d' }}>ที่พัก</div>
+                  <div className="text-xs font-medium" style={{ color: '#b8711b' }}>ที่พัก</div>
                   <div className="font-semibold">{h.name}</div>
                   <div className="text-sm text-muted">{h.description}</div>
                   {h.priceText && <div className="text-sm">{h.priceText}</div>}
@@ -122,7 +122,7 @@ export default function TripMap({ places, hotels = [], area = '', className = 'h
                     target="_blank"
                     rel="noopener noreferrer"
                     className={btn}
-                    style={{ background: '#3e6a58', color: '#fff' }}
+                    style={{ background: 'linear-gradient(135deg,#5b4bd0,#8a5be0)', color: '#fff' }}
                   >
                     นำทาง
                   </a>
@@ -131,7 +131,7 @@ export default function TripMap({ places, hotels = [], area = '', className = 'h
                     target="_blank"
                     rel="noopener noreferrer"
                     className={btn}
-                    style={{ background: '#e8e7e0', color: '#232b27' }}
+                    style={{ background: '#ece7fa', color: '#261f4d' }}
                   >
                     ตรวจสอบ
                   </a>

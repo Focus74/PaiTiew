@@ -79,7 +79,7 @@ export default function TelegramConnect({ userId }: { userId: string }) {
   if (linked === null) return null
 
   return (
-    <section className="mb-8 sm:mb-10 max-w-xl rounded-2xl bg-moss-soft/50 p-4 sm:p-5 space-y-3">
+    <section className="mb-8 sm:mb-10 max-w-xl glass rounded-3xl p-4 sm:p-5 space-y-3">
       <h2 className="font-semibold text-ink">แจ้งเตือนผ่าน Telegram</h2>
       {linked ? (
         <>
