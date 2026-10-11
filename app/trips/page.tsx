@@ -49,14 +49,14 @@ export default function TripsPage() {
     <main className="min-h-dvh">
       <div className="mx-auto max-w-6xl px-5 sm:px-8 pb-24">
         <AuthBar />
-        <h1 className="pt-6 sm:pt-10 pb-8 text-3xl sm:text-4xl font-semibold tracking-tight text-ink">ทริปของฉัน</h1>
+        <h1 className="pt-6 sm:pt-10 pb-8 font-display text-3xl sm:text-4xl font-medium tracking-tight text-ink"><span aria-hidden="true" className="mr-2 text-[#ffb36b]">✦</span>ทริปของฉัน</h1>
 
         {authLoading ? null : !user ? (
           <div className="max-w-md space-y-4">
             <p className="text-muted">เข้าสู่ระบบเพื่อดูทริปที่เคยบันทึกไว้</p>
             <button
               onClick={signInWithGoogle}
-              className="px-5 py-3 rounded-full bg-moss hover:bg-moss-deep text-surface text-sm font-medium cursor-pointer"
+              className="px-5 py-3 rounded-full bg-moss text-surface text-sm font-medium cursor-pointer"
             >
               เข้าสู่ระบบด้วย Google
             </button>
@@ -72,9 +72,9 @@ export default function TripsPage() {
               </p>
             )}
 
-            <ul className="divide-y divide-line border-y border-line mb-12">
+            <ul className="space-y-3 mb-12">
               {trips.map((t) => (
-                <li key={t.id} className={`py-4 flex flex-wrap items-center justify-between gap-3 ${openId === t.id ? 'bg-moss-soft/40 -mx-3 px-3 rounded-xl' : ''}`}>
+                <li key={t.id} className={`glass rounded-3xl px-5 py-4 flex flex-wrap items-center justify-between gap-3 ${openId === t.id ? 'ring-2 ring-moss/40' : ''}`}>
                   <div className="min-w-0">
                     <p className="font-medium text-ink">{t.title}</p>
                     <p className="text-sm text-muted">
@@ -87,7 +87,7 @@ export default function TripsPage() {
                   <div className="flex gap-2">
                     <button
                       onClick={() => setOpenId(openId === t.id ? null : t.id)}
-                      className="px-4 py-2 rounded-full border border-line text-sm text-ink hover:bg-surface cursor-pointer"
+                      className="px-4 py-2 rounded-full border border-white/80 bg-white/70 text-sm text-ink hover:bg-white cursor-pointer"
                     >
                       {openId === t.id ? 'ซ่อนแผน' : 'ดูแผน'}
                     </button>
